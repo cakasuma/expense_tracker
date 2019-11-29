@@ -1,26 +1,34 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { ActionButton, COLOR } from "react-native-material-ui";
+import { connect } from "react-redux";
+import { FETCH_EXPENSES } from "../utils/constants";
 
-const Dashboard = ({ navigation }) => {
-  useState(() => {
-    console.log("mounted");
-  }, []);
+class Dashboard extends Component {
+  componentDidMount() {
+    this.props.fetchExpenses();
+  }
 
-  const addNewExpense = () => {
-    navigation.navigate("add_expense");
-  };
+  addNewExpense() {
+    this.props.navigation.navigate("add_expense");
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello Dashboard</Text>
-      <ActionButton
-        style={{ container: { backgroundColor: COLOR.indigo500 } }}
-        onPress={addNewExpense}
-      />
-    </View>
-  );
-};
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>
+          {this.props.reducer.transactions
+            ? this.props.reducer.transactions.length
+            : 0}
+        </Text>
+        <ActionButton
+          style={{ container: { backgroundColor: COLOR.indigo500 } }}
+          onPress={this.addNewExpense.bind(this)}
+        />
+      </View>
+    );
+  }
+}
 
 // Styles
 const styles = StyleSheet.create({
@@ -43,4 +51,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Dashboard;
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchExpenses: () => dispatch({ type: FETCH_EXPENSES })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

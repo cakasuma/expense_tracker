@@ -1,10 +1,13 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { connect } from "react-redux";
 import { Button, COLOR } from "react-native-material-ui";
 import * as yup from "yup";
 import { Formik } from "formik";
-import { OutlinedTextField } from "react-native-material-textfield";
+import uuid from "uuid/v1";
+import { TextField } from "react-native-material-textfield";
 import { Dropdown } from "react-native-material-dropdown";
+import { ADD_EXPENSE } from "../utils/constants";
 
 const validation_schema = yup.object().shape({
   description: yup.string().required(),
@@ -25,6 +28,33 @@ const category_list = [
     value: "Income"
   }
 ];
+
+const type_list = [
+  {
+    value: "Food"
+  },
+  {
+    value: "Transportation"
+  },
+  {
+    value: "Social Life"
+  },
+  {
+    value: "Household"
+  },
+  {
+    value: "Health"
+  },
+  {
+    value: "Gift"
+  },
+  {
+    value: "Education"
+  },
+  {
+    value: "Other"
+  }
+];
 /*
 - id
 - description
@@ -32,18 +62,22 @@ const category_list = [
 - type [Food, transportation, social life, household, health, gift, education, other]
 - amount
 */
-const AddExpense = () => (
+const AddExpense = ({ addNewExpense, navigation }) => (
   <View style={styles.container}>
     <Text style={styles.title}>Please add your expenses</Text>
     <Formik
       initialValues={{ description: "", category: "", type: "", amount: "" }}
       validationSchema={validation_schema}
-      onSubmit={(values, { setSubmitting, errors }) => {
-        console.log(values);
-        console.log(errors);
-        setTimeout(() => {
-          setSubmitting(false);
-        }, 2000);
+      onSubmit={(values, { setSubmitting }) => {
+        const data = {
+          uid: uuid(),
+          ...values,
+          date: new Date().toString()
+        };
+        addNewExpense(data);
+
+        navigation.navigate("dashboard");
+        setSubmitting(false);
       }}
     >
       {({
@@ -56,7 +90,7 @@ const AddExpense = () => (
         errors
       }) => (
         <View>
-          <OutlinedTextField
+          <TextField
             label="Description"
             onChangeText={handleChange("description")}
             onBlur={handleBlur("description")}
@@ -68,22 +102,20 @@ const AddExpense = () => (
             label="Category"
             error={errors.category}
             data={category_list}
-            onChangeText={e => {
-              console.log(e);
-              setFieldValue("category", e);
-            }}
-            dropdownOffset={{ top: 0 }}
+            onChangeText={e => setFieldValue("category", e)}
+            dropdownOffset={{ top: 10 }}
+            drop
             containerStyle={styles.inputContainer}
           />
-          <OutlinedTextField
+          <Dropdown
             label="Type"
-            onChangeText={handleChange("type")}
-            onBlur={handleBlur("type")}
             error={errors.type}
-            value={values.type}
+            data={type_list}
+            onChangeText={e => setFieldValue("type", e)}
+            dropdownOffset={{ top: 10 }}
             containerStyle={styles.inputContainer}
           />
-          <OutlinedTextField
+          <TextField
             label="Amount"
             onChangeText={handleChange("amount")}
             onBlur={handleBlur("amount")}
@@ -93,8 +125,8 @@ const AddExpense = () => (
           />
           <Button
             onPress={handleSubmit}
-            disabled={isSubmitting}
             accent
+            disabled={isSubmitting}
             text="Add"
             style={{
               container: styles.buttonContainer,
@@ -139,4 +171,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddExpense;
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  addNewExpense: new_transactions =>
+    dispatch({ type: ADD_EXPENSE, new_transactions })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddExpense);

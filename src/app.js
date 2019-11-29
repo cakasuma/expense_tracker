@@ -1,12 +1,8 @@
 import React from "react";
-import { createStore, applyMiddleware } from "redux";
 import { COLOR, ThemeContext, getTheme } from "react-native-material-ui";
 import { Provider } from "react-redux";
-import logger from "redux-logger";
-import reducer from "./reducers";
 import Navigation from "./navigation";
-
-const store = createStore(reducer, applyMiddleware(logger));
+import store from "./store/expense-store";
 
 const uiTheme = {
   palette: {
