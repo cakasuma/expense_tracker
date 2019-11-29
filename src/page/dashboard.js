@@ -7,6 +7,16 @@ import { FETCH_EXPENSES } from "../utils/constants";
 class Dashboard extends Component {
   componentDidMount() {
     this.props.fetchExpenses();
+
+    this.focusListener = this.props.navigation.addListener("didFocus", () => {
+      // The screen is focused
+      this.props.fetchExpenses();
+    });
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove();
   }
 
   addNewExpense() {
@@ -16,10 +26,11 @@ class Dashboard extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text>cok</Text>
         <Text>
           {this.props.reducer.transactions
             ? this.props.reducer.transactions.length
-            : 0}
+            : "0"}
         </Text>
         <ActionButton
           style={{ container: { backgroundColor: COLOR.indigo500 } }}

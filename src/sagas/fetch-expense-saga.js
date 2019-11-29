@@ -10,10 +10,9 @@ import {
 
 // function that makes the api request and returns a Promise for response
 function fetchExpenses() {
-  console.log("is it connecting here?");
   return axios({
     method: "get",
-    url: "https://broken-sun-221.getsandbox.com/transactions"
+    url: "https://expense-tracker-mustofa.getsandbox.com/transactions"
   });
 }
 
