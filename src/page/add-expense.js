@@ -65,6 +65,7 @@ const AddExpense = ({ addNewExpense, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Please add your expenses</Text>
+      {/* I use formik: https://jaredpalmer.com/formik/docs/api/formik */}
       <Formik
         initialValues={{ description: "", category: "", type: "", amount: "" }}
         validationSchema={validation_schema}
