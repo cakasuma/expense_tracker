@@ -24,9 +24,6 @@ const validation_schema = yup.object().shape({
 const category_list = [
   {
     value: "Expense"
-  },
-  {
-    value: "Income"
   }
 ];
 

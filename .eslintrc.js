@@ -11,7 +11,8 @@ module.exports = {
     "react/prop-types": "off",
     "comma-dangle": "off",
     "react/destructuring-assignment": "off",
-    "react/jsx-no-bind": "off"
+    "react/jsx-no-bind": "off",
+    radix: "off"
   },
   globals: {
     fetch: false
